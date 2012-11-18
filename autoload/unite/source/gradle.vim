@@ -5,7 +5,9 @@ set cpo&vim
 
 " define unite source
 function! unite#sources#gradle#define()
-  return s:source
+  return executable('gradle') && unite#util#has_vimproc() 
+              \ ? [s:source]
+              \ : []
 endfunction
 
 " source object
@@ -19,17 +21,19 @@ let s:source = {
 function! s:source.gather_candidates(args, context) "{{{
 
   let candidates = []
-
-  let dbs = []
+  " get gradle tasks
+  let result = split(vimproc#system("gradle -q tasks"), '\n')
+  if empty(result)
+    return []
+  endif
 
   " set to unite candidates
-  for db in dbs
+  for line in result[6:]
     call add(candidates, {
-          \ "word": db,
-          \ "kind": "source",
-          \ "action__source_name" : ["mongodb", db],
+          \ "word": line,
+          \ "abbr": line,
           \ })
-    unlet db
+    unlet line
   endfor
 
   return candidates
