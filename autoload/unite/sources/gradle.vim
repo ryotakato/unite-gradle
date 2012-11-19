@@ -29,11 +29,14 @@ function! s:source.gather_candidates(args, context) "{{{
 
   " set to unite candidates
   for line in result[6:]
-    let is_dummy = line =~ "^-" || len(line) == 0
+    let matches = matchlist(line,'^\([^\s].*\)\s-\s\(.*\)$')
+    if len(matches) == 0
+      continue
+    endif
+
     call add(candidates, {
-          \ "word": line,
-          \ "abbr": line,
-          \ "is_dummy": is_dummy,
+          \ "word": matches[1],
+          \ "abbr": unite#util#truncate(matches[1], 25).(matches[2] != '' ? ' -- ' . matches[2] : ''),
           \ })
     unlet line
   endfor
