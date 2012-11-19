@@ -29,9 +29,11 @@ function! s:source.gather_candidates(args, context) "{{{
 
   " set to unite candidates
   for line in result[6:]
+    let is_dummy = line =~ "^-" || len(line) == 0
     call add(candidates, {
           \ "word": line,
           \ "abbr": line,
+          \ "is_dummy": is_dummy,
           \ })
     unlet line
   endfor
