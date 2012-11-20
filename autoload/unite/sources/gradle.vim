@@ -29,7 +29,7 @@ function! s:source.gather_candidates(args, context) "{{{
 
   " set to unite candidates
   for line in result[6:]
-    let matches = matchlist(line,'^\([^\s].*\)\s-\s\(.*\)$')
+    let matches = matchlist(line,'^\(\S*\)\s-\s\(.*\)$')
     if len(matches) == 0
       continue
     endif
