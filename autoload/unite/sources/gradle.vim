@@ -18,7 +18,6 @@ let s:source = {
       \ }
 
 " start for async
-"function! s:source.gather_candidates(args, context) "{{{
 function! s:source.hooks.on_init(args, context) "{{{
 
   let a:context.is_async = 1
@@ -89,17 +88,13 @@ function! s:source.async_gather_candidates(args, context)"{{{
 
 endfunction"}}}
 
+" close
 function! s:source.hooks.on_close(args, context) "{{{
   if has_key(a:context, 'source__proc')
     call a:context.source__proc.waitpid()
   endif
 endfunction "}}}
 
-" set to unite current prompt
-function! s:set_prompt(str)
-  let unite = unite#get_current_unite()
-  let unite.prompt = a:str
-endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
